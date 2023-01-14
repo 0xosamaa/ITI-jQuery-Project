@@ -6,7 +6,6 @@ let employees = $('tr .employee');
         method: 'GET',
         dataType: 'JSON',
         success: function (data) {
-            // console.log(data);
             let employees = data.map((employee) => {
                 return `
             <tr class="employee" data-id="${employee.id}" data-name="${employee.name}" data-age="${employee.age}" data-salary="${employee.salary}">
@@ -20,7 +19,6 @@ let employees = $('tr .employee');
             });
             $('table').append(employees);
             employees = $('tr.employee');
-            console.log(employees);
         },
     });
 })();
@@ -45,7 +43,6 @@ $('table').on('input', 'td', function (e) {
 //         type: 'PUT',
 //         data: JSON.stringify(employee),
 //         success: function (data) {
-//             console.log(data);
 //         },
 //         contentType: 'application/json',
 //         processData: false,
@@ -61,7 +58,6 @@ $('.confirm').on('click', function (e) {
             type: 'PUT',
             data: JSON.stringify($(employee).data()),
             success: function (data) {
-                console.log(data);
             },
             contentType: 'application/json',
             processData: false,
@@ -105,7 +101,6 @@ $('.add').on('click', function () {
     `);
 
     $('.new').on('click', '.confirm-add', function () {
-        console.log('hi');
         let new_employee = {
             name: $('input.name').val(),
             age: $('input.age').val(),
@@ -117,7 +112,6 @@ $('.add').on('click', function () {
             type: 'POST',
             data: JSON.stringify(new_employee),
             success: function (data) {
-                console.log(data);
             },
             contentType: 'application/json',
             processData: false,
