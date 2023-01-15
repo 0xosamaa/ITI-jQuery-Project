@@ -12,7 +12,7 @@
     flex-direction: column;
 }
 table {
-    width: 60%;
+    width: 70%;
     border: 1px solid black;
     border-radius: 8px;
 }
@@ -53,13 +53,33 @@ table tbody tr {
     border-radius: 8px;
     background-color: slateblue;
 }
-.confirm, .confirm-add {
+.confirm,
+.confirm-add {
     color: white;
     cursor: pointer;
     border-radius: 8px;
     background-color: green;
 }
 
-.confirm-add{
+.confirm-add {
     background-color: black;
+}
+
+.error-msg,
+.success-msg {
+    display: none;
+    color: white;
+    width: 70%;
+    text-align: center;
+    padding: 20px 40px;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    margin-bottom: 10px;
+}
+
+.error-msg {
+    background-color: red;
+}
+.success-msg {
+    background-color: green;
 }

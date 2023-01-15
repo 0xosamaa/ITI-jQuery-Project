@@ -1,6 +1,6 @@
 let employees = $('tr .employee');
 
-(function () {
+const employeesTable = () => {
     $.ajax({
         url: 'http://localhost:3000/employees',
         method: 'GET',
@@ -17,16 +17,17 @@ let employees = $('tr .employee');
             </tr>
             `;
             });
+            $('table .employee').remove();
             $('table').append(employees);
             employees = $('tr.employee');
         },
     });
-})();
+};
+employeesTable();
 
 let changed = false;
 
 $('table').on('input', 'td', function (e) {
-    e.preventDefault();
     $(e.target).parent().data($(e.target).attr('class'), $(e.target).text());
     changed = true;
     $(e.target).parent().addClass('changed');
@@ -51,13 +52,23 @@ $('table').on('input', 'td', function (e) {
 // });
 
 $('.confirm').on('click', function (e) {
-    e.preventDefault();
     $('tr.employee.changed').each((i, employee) => {
+        if (
+            !validInput(
+                $(employee).data('name'),
+                $(employee).data('age'),
+                $(employee).data('salary')
+            )
+        ) {
+            return;
+        }
+
         $.ajax({
             url: 'http://localhost:3000/employees/' + $(employee).data('id'),
             type: 'PUT',
             data: JSON.stringify($(employee).data()),
-            success: function (data) {
+            success: function () {
+                employeesTable();
             },
             contentType: 'application/json',
             processData: false,
@@ -78,6 +89,9 @@ $('table').on('click', '.delete', function (e) {
             'http://localhost:3000/employees/' +
             $(e.target).parent().parent().data('id'),
         type: 'DELETE',
+        success: function () {
+            employeesTable();
+        },
     });
 });
 
@@ -107,14 +121,59 @@ $('.add').on('click', function () {
             salary: $('input.salary').val(),
         };
 
+        if (
+            !validInput(
+                new_employee.name,
+                new_employee.age,
+                new_employee.salary
+            )
+        ) {
+            return;
+        }
+
         $.ajax({
             url: 'http://localhost:3000/employees/',
             type: 'POST',
             data: JSON.stringify(new_employee),
-            success: function (data) {
+            success: function () {
+                $('.new').remove();
+                employeesTable();
             },
             contentType: 'application/json',
             processData: false,
         });
     });
 });
+
+const validInput = (name, age, salary) => {
+    let say = '';
+    if (name.length > 30 || /\d/.test(name)) {
+        say = 'Please enter a valid name';
+        $('.error-msg').css('display', 'block');
+        $('.error-msg').text(say);
+        return false;
+    }
+    if (age > 60 || age < 20 || isNaN(age)) {
+        say = 'Please enter a valid age';
+        $('.error-msg').css('display', 'block');
+        $('.error-msg').text(say);
+        return false;
+    }
+    if (isNaN(salary)) {
+        say = 'Please enter a valid salary';
+        $('.error-msg').css('display', 'block');
+        $('.error-msg').text(say);
+        return false;
+    }
+    say = 'Submission successful';
+
+    $('.error-msg').css('display', 'none');
+    $('.error-msg').empty();
+    $('.success-msg').css('display', 'block');
+    $('.success-msg').text(say);
+    setTimeout(() => {
+        $('.success-msg').css('display', 'none');
+        $('.success-msg').empty();
+    }, 3000);
+    return true;
+};
